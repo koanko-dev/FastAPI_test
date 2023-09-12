@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
 
 function App() {
-  const [msg, setMsg] = useState(null);
+  const [questionList, setQuestionList] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/hello").then((response) => {
+    fetch("http://127.0.0.1:8000/api/question/list").then((response) => {
       response.json().then((json) => {
-        setMsg(json.message);
+        setQuestionList(json);
       });
     });
   }, []);
 
-  return <div>{msg !== null ? msg : "loading..."}</div>;
+  let content = "loading...";
+
+  console.log('log', questionList)
+
+  if (questionList.length > 0) {
+    content = questionList.map((question) => {
+      return <li key={question.id}>{question.subject}</li>
+    })
+  }
+
+  return <div>{content}</div>;
 }
 
 export default App;
